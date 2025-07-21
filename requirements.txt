@@ -1,0 +1,95 @@
+# TAKAWASI Unified Agent Requirements
+# Combining Chimera Agent + ACS + Memory Quantum System
+
+# Core Python dependencies
+asyncio
+typing_extensions>=4.0.0
+pathlib2>=2.3.0
+dataclasses>=0.8
+json5>=0.9.0
+
+# Data processing
+numpy>=1.21.0
+pandas>=1.3.0
+sqlite3
+
+# AI/ML frameworks
+langchain>=0.1.0
+langgraph>=0.1.0
+langchain-experimental>=0.0.50
+
+# Async processing
+asyncio
+aiofiles>=0.8.0
+aiohttp>=3.8.0
+
+# System integration
+psutil>=5.8.0
+subprocess32>=3.5.4
+pyautogui>=0.9.53
+pynput>=1.7.6
+
+# Configuration & logging
+pyyaml>=6.0
+configparser
+loguru>=0.6.0
+
+# Database
+sqlite3
+sqlalchemy>=1.4.0
+aiosqlite>=0.17.0
+
+# Memory & caching
+redis>=4.0.0
+diskcache>=5.4.0
+joblib>=1.1.0
+
+# Testing
+pytest>=7.0.0
+pytest-asyncio>=0.20.0
+pytest-mock>=3.6.0
+
+# Development tools
+black>=22.0.0
+isort>=5.10.0
+mypy>=0.950
+flake8>=4.0.0
+
+# Optional: AI service integrations
+# openai>=0.27.0
+# anthropic>=0.3.0
+# google-generativeai>=0.3.0
+
+# System control (Windows/WSL2)
+pywin32>=227; sys_platform == "win32"
+pygetwindow>=0.0.9
+pillow>=9.0.0
+
+# Web scraping & automation
+beautifulsoup4>=4.11.0
+selenium>=4.5.0
+requests>=2.28.0
+
+# Data visualization
+matplotlib>=3.5.0
+plotly>=5.10.0
+seaborn>=0.11.0
+
+# File processing
+openpyxl>=3.0.10
+python-docx>=0.8.11
+pypdf2>=2.11.0
+
+# CLI & UI
+click>=8.1.0
+rich>=12.5.0
+textual>=0.1.18
+
+# Optional: Advanced features
+# transformers>=4.21.0
+# torch>=1.12.0
+# sentence-transformers>=2.2.0
+
+# Monitoring & metrics
+prometheus-client>=0.14.0
+psutil>=5.9.0

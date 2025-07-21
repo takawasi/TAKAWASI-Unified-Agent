@@ -24,23 +24,13 @@ import json
 sys.path.append(str(Path(__file__).parent.parent))
 
 try:
-    # Chimera Agent components
-    from takawasi_chimera_agent_v2.core.chimera_agent import ChimeraAgent
-    from takawasi_chimera_agent_v2.core.interfaces.claude_code_interface import ClaudeCodeInterface
-    from takawasi_chimera_agent_v2.core.interfaces.gemini_cli_interface import GeminiCLIInterface
-    from takawasi_chimera_agent_v2.tools.memory_driven_tool_hub import MemoryDrivenToolHub
-    
-    # ACS components
-    from takawasi_acs_kiro_integration_basic import KiroIntegration
-    from takawasi_acs_phase2_multi_agent_system import MultiAgentSystem
-    from takawasi_acs_phase3_self_evolution import SelfEvolutionEngine
-    from takawasi_acs_pc_bridge_wsl2 import PCController
-    
-    # Memory system
-    from memory_system.ultimate_memory_system import UltimateMemorySystem
-    from memory_system.ultimate_quantum_memory import QuantumMemoryEngine
+    # Integrated core systems - TRUE INTEGRATION
+    from chimera_core import ChimeraAgent, ClaudeCodeInterface, GeminiCLIInterface, MemoryDrivenToolHub
+    from acs_core import ACSCore, KiroIntegration, MultiAgentSystem, SelfEvolutionEngine, PCController
+    from memory_quantum_core import MemoryQuantumCore, MemoryQuantum
     
     IMPORTS_AVAILABLE = True
+    print("✅ Integrated core systems loaded successfully - TRUE UNIFIED SYSTEM")
 except ImportError as e:
     print(f"⚠️ Import Warning: {e}")
     print("🔧 Some components may not be available. Running in limited mode.")
@@ -70,8 +60,8 @@ class TAKAWASIUnifiedAgent:
         self.memory_system = None
         self.unified_status = "initializing"
         
-        # Initialize systems
-        asyncio.run(self._initialize_systems())
+        # Initialize systems - will be done during first execute_task call
+        self._initialization_complete = False
         
         print("✅ TAKAWASI Unified Agent initialized successfully!")
     
@@ -129,17 +119,12 @@ class TAKAWASIUnifiedAgent:
     
     async def _initialize_memory_system(self):
         """Initialize the unified memory system"""
-        print("🧠 Initializing Memory Quantum System...")
+        print("🧠 Initializing Memory Quantum Core...")
         
         if IMPORTS_AVAILABLE:
             try:
-                self.memory_system = {
-                    'quantum': QuantumMemoryEngine(),
-                    'ultimate': UltimateMemorySystem(),
-                    'session_memory': {},
-                    'cross_session_learnings': []
-                }
-                print("✅ Memory Quantum System initialized")
+                self.memory_system = MemoryQuantumCore(f"unified_memory_{self.session_id}.db")
+                print("✅ Memory Quantum Core initialized - TRUE INTEGRATION")
             except Exception as e:
                 print(f"⚠️ Memory system limited mode: {e}")
                 self.memory_system = {'fallback': True}
@@ -147,24 +132,13 @@ class TAKAWASIUnifiedAgent:
             self.memory_system = {'fallback': True}
     
     async def _initialize_chimera_agent(self):
-        """Initialize Chimera Agent components"""
-        print("🔀 Initializing Chimera Agent...")
+        """Initialize Chimera Agent Core"""
+        print("🔀 Initializing Chimera Agent Core...")
         
         if IMPORTS_AVAILABLE and self.config['chimera']['claude_code_enabled']:
             try:
-                # Initialize core Chimera components
-                claude_interface = ClaudeCodeInterface()
-                gemini_interface = GeminiCLIInterface()
-                tool_hub = MemoryDrivenToolHub(self.memory_system)
-                
-                self.chimera_agent = ChimeraAgent(
-                    claude_interface=claude_interface,
-                    gemini_interface=gemini_interface,
-                    tool_hub=tool_hub,
-                    memory_system=self.memory_system
-                )
-                
-                print("✅ Chimera Agent initialized")
+                self.chimera_agent = ChimeraAgent(self.config['chimera'])
+                print("✅ Chimera Agent Core initialized - TRUE INTEGRATION")
             except Exception as e:
                 print(f"⚠️ Chimera Agent limited mode: {e}")
                 self.chimera_agent = {'fallback': True}
@@ -172,27 +146,16 @@ class TAKAWASIUnifiedAgent:
             self.chimera_agent = {'fallback': True}
     
     async def _initialize_acs_systems(self):
-        """Initialize ACS (Autonomous Computer System) components"""
-        print("🤖 Initializing ACS Systems...")
+        """Initialize ACS (Autonomous Computer System) Core"""
+        print("🤖 Initializing ACS Core...")
         
         if IMPORTS_AVAILABLE:
             try:
-                # Initialize ACS components
-                if self.config['acs']['kiro_integration']:
-                    self.acs_systems['kiro'] = KiroIntegration()
-                
-                if self.config['acs']['multi_agent_coordination']:
-                    self.acs_systems['multi_agent'] = MultiAgentSystem()
-                
-                if self.config['acs']['self_evolution']:
-                    self.acs_systems['evolution'] = SelfEvolutionEngine()
-                
-                if self.config['acs']['pc_control']:
-                    self.acs_systems['pc_controller'] = PCController()
-                
-                print("✅ ACS Systems initialized")
+                self.acs_core = ACSCore(self.config['acs'])
+                self.acs_systems = {'core': self.acs_core, 'integrated': True}
+                print("✅ ACS Core initialized - TRUE INTEGRATION")
             except Exception as e:
-                print(f"⚠️ ACS Systems limited mode: {e}")
+                print(f"⚠️ ACS Core limited mode: {e}")
                 self.acs_systems = {'fallback': True}
         else:
             self.acs_systems = {'fallback': True}
@@ -285,6 +248,11 @@ class TAKAWASIUnifiedAgent:
         """
         print(f"🎯 Executing unified task: {task_description}")
         
+        # Initialize systems if not done yet
+        if not self._initialization_complete:
+            await self._initialize_systems()
+            self._initialization_complete = True
+        
         if self.unified_status != "ready":
             return {
                 'success': False,
@@ -339,14 +307,25 @@ class TAKAWASIUnifiedAgent:
                 'estimated_complexity': 'medium'
             }
         
-        # Advanced Chimera analysis would go here
-        return {
-            'analysis_type': 'chimera',
-            'reasoning': f'Chimera agent analysis of: {task}',
-            'approach': 'multi_agent_coordination',
-            'estimated_complexity': 'high',
-            'suggested_tools': ['claude_code', 'memory_search', 'tool_selection']
-        }
+        # TRUE INTEGRATION: Use actual Chimera Agent execution
+        try:
+            chimera_result = await self.chimera_agent.execute_task(task, context)
+            return {
+                'analysis_type': 'chimera_integrated',
+                'reasoning': f'Integrated Chimera analysis: {chimera_result["result"]["integrated_output"]}',
+                'approach': 'unified_multi_agent_coordination',
+                'estimated_complexity': 'high',
+                'suggested_tools': chimera_result["analysis"]["required_tools"],
+                'agents_used': chimera_result.get("agents_used", []),
+                'success_rate': chimera_result["result"]["success_rate"]
+            }
+        except Exception as e:
+            return {
+                'analysis_type': 'chimera_fallback',
+                'reasoning': f'Chimera analysis with error handling: {task}',
+                'approach': 'resilient_execution',
+                'error_handled': str(e)
+            }
     
     async def _acs_planning(self, analysis: Dict) -> Dict:
         """Use ACS for execution planning"""
@@ -358,18 +337,29 @@ class TAKAWASIUnifiedAgent:
                 'resources_needed': ['basic']
             }
         
-        # Advanced ACS planning would go here
-        return {
-            'plan_type': 'acs_advanced',
-            'steps': [
-                'multi_agent_coordination',
-                'pc_control_if_needed',
-                'self_evolution_trigger',
-                'result_validation'
-            ],
-            'estimated_time': '5-15 minutes',
-            'resources_needed': ['multi_agent', 'memory', 'pc_control']
-        }
+        # TRUE INTEGRATION: Use actual ACS Core execution
+        try:
+            if 'core' in self.acs_systems:
+                # Create task description from analysis
+                task_desc = f"Execute plan based on analysis: {analysis.get('reasoning', 'Unknown task')}"
+                acs_result = await self.acs_systems['core'].execute_task(task_desc, 'unified_planning', 8)
+                
+                return {
+                    'plan_type': 'acs_integrated',
+                    'steps': acs_result['kiro_specification']['task_breakdown'],
+                    'estimated_time': f"{acs_result['execution_time']:.1f} seconds",
+                    'resources_needed': acs_result['kiro_specification']['required_capabilities'],
+                    'actions_performed': acs_result.get('actions_performed', 0),
+                    'actions_per_second': acs_result.get('actions_per_second', 0),
+                    'evolution_triggered': acs_result.get('evolution_triggered', False)
+                }
+        except Exception as e:
+            return {
+                'plan_type': 'acs_fallback',
+                'steps': ['resilient_execution'],
+                'estimated_time': 'adaptive',
+                'error_handled': str(e)
+            }
     
     async def _unified_execution(self, plan: Dict) -> Dict:
         """Execute the unified plan"""
@@ -399,22 +389,29 @@ class TAKAWASIUnifiedAgent:
     
     async def _integrate_learning(self, task: str, analysis: Dict, result: Dict):
         """Integrate the experience into memory and trigger learning"""
-        if isinstance(self.memory_system, dict) and 'fallback' not in self.memory_system:
-            learning_entry = {
-                'type': 'task_completion',
-                'task': task,
-                'analysis': analysis,
-                'result': result,
-                'success': result.get('overall_status') == 'completed',
-                'timestamp': datetime.now().isoformat(),
-                'session_id': self.session_id
-            }
-            
-            # Store in memory for future learning
-            self.memory_system['session_memory'][task] = learning_entry
+        if not (isinstance(self.memory_system, dict) and 'fallback' in self.memory_system):
+            try:
+                # TRUE INTEGRATION: Store in Memory Quantum Core
+                learning_content = f"Task: {task} | Analysis: {analysis.get('reasoning', 'N/A')} | Result: {result.get('overall_status', 'unknown')}"
+                
+                quantum_id = await self.memory_system.store_memory_quantum(
+                    content=learning_content,
+                    content_type="task_completion",
+                    tags=["unified_system", "learning", task[:20]],
+                    context={
+                        'analysis': analysis,
+                        'result': result,
+                        'session_id': self.session_id
+                    }
+                )
+                
+                print(f"💾 Learning stored as quantum: {quantum_id}")
+                
+            except Exception as e:
+                print(f"⚠️ Memory integration error: {e}")
         
         # Trigger self-evolution if enabled
-        if 'evolution' in self.acs_systems:
+        if 'core' in self.acs_systems:
             await self._trigger_evolution(task, result)
     
     async def _trigger_evolution(self, task: str, result: Dict):
@@ -426,16 +423,26 @@ class TAKAWASIUnifiedAgent:
     
     async def _log_error_for_learning(self, task: str, error: str):
         """Log errors for future learning and improvement"""
-        if isinstance(self.memory_system, dict) and 'fallback' not in self.memory_system:
-            error_entry = {
-                'type': 'error',
-                'task': task,
-                'error': error,
-                'timestamp': datetime.now().isoformat(),
-                'session_id': self.session_id
-            }
-            
-            self.memory_system['session_memory'][f'error_{task}'] = error_entry
+        if not (isinstance(self.memory_system, dict) and 'fallback' in self.memory_system):
+            try:
+                # TRUE INTEGRATION: Store error in Memory Quantum Core
+                error_content = f"ERROR in task: {task} | Error: {error}"
+                
+                quantum_id = await self.memory_system.store_memory_quantum(
+                    content=error_content,
+                    content_type="error_log",
+                    tags=["error", "learning", "unified_system"],
+                    context={
+                        'task': task,
+                        'error': error,
+                        'session_id': self.session_id
+                    }
+                )
+                
+                print(f"🚨 Error logged as quantum: {quantum_id}")
+                
+            except Exception as e:
+                print(f"⚠️ Error logging failed: {e}")
     
     def get_system_status(self) -> Dict:
         """Get current system status"""

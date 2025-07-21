@@ -1,0 +1,37 @@
+# TAKAWASI Unified Agent - .gitignore
+
+# Database files (auto-generated)
+*.db
+*.db-shm
+*.db-wal
+
+# Exception: Include demo databases
+!demo_*.db
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Performance and session files  
+session_*.json
+*_performance_*.json
+*_final_metrics_*.json
+
+# Temporary test files
+test_*/
+temp_test_*.py
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

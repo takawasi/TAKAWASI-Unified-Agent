@@ -1,0 +1,55 @@
+{
+  "coordination_history": [
+    {
+      "task": "Initialize demo multi-agent system",
+      "execution_time": 0.100669,
+      "success_rate": 1.0,
+      "agents_used": 1,
+      "quality_score": 0.9800000000000001,
+      "timestamp": "2025-07-21T23:00:45.805130",
+      "session_id": "20250721_230045"
+    }
+  ],
+  "agent_performance": {
+    "agent_1_general": {
+      "total_tasks": 1,
+      "successful_tasks": 1,
+      "average_time": 0,
+      "reliability_score": 1.0
+    }
+  },
+  "active_agents": {
+    "agent_1_general": {
+      "id": "agent_1_general",
+      "type": "general",
+      "capabilities": [
+        "problem_solving",
+        "reasoning",
+        "communication"
+      ],
+      "status": "completed",
+      "created_at": "2025-07-21T23:00:45.704485",
+      "performance_history": [
+        {
+          "task": {
+            "description": "Execute general task for: Initialize demo multi-agent system",
+            "agent_id": "agent_1_general",
+            "agent_type": "general",
+            "capabilities": [
+              "problem_solving",
+              "reasoning",
+              "communication"
+            ],
+            "context": null,
+            "priority": "normal"
+          },
+          "result": "Agent agent_1_general (general) completed: Execute general task for: Initialize demo multi-agent system",
+          "timestamp": "2025-07-21T23:00:45.805052",
+          "success": true
+        }
+      ]
+    }
+  },
+  "session_id": "20250721_230045",
+  "shutdown_time": "2025-07-21T23:00:45.814961"
+}
